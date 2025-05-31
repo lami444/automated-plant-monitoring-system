@@ -1,0 +1,44 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+const int mq2AnalogPin = A1;  
+const int buzzerPin = 4;    
+
+
+void setup() {
+  lcd.init();             
+  lcd.backlight();                
+  lcd.clear();                 
+
+  pinMode(buzzerPin, OUTPUT);   
+
+  Serial.begin(9600);
+}
+
+void loop() { 
+
+  int mq2Value = analogRead(mq2AnalogPin); // Read the MQ2 sensor analog value
+
+
+  lcd.clear();
+
+  lcd.setCursor(0, 1); 
+  lcd.print("Gas:");
+  lcd.print(mq2Value);
+
+  if (mq2Value < 200) {
+    digitalWrite(buzzerPin, HIGH);
+    lcd.print(" Buzzer: On ");
+  } else {
+    digitalWrite(buzzerPin, LOW);
+    lcd.print(" Buzzer: Off");
+  }
+
+  Serial.print("Gas Analog: ");
+  Serial.print(mq2Value);
+
+
+  delay(1000);
+}
